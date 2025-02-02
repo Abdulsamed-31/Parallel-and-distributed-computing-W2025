@@ -1,6 +1,6 @@
 import threading
 import time
-from functions import *
+from src.functions import *
 
 
 # Measure the total time for both operations

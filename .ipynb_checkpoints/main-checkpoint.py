@@ -1,14 +1,15 @@
-from src.fprocessing import *
-from src.fthreading import *
-from src.functions import *
 
+from src.fprocessing import fprocessing
+from src.fthreading import fthreading
 
 def main():
-    print("Starting multiprocessing...")
-    fprocessing()  # This will run the multiprocessing version
+    # Call fprocessing to run the multiprocessing code
+    print("Running fprocessing (Multiprocessing)...")
+    fprocessing()
 
-    print("\nStarting threading...")
-    fthreading()  # This will run the threading version
+    # Call fthreading to run the threading code
+    print("\nRunning fthreading (Threading)...")
+    fthreading()
 
 if __name__ == "__main__":
     main()

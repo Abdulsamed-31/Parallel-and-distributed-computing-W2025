@@ -1,6 +1,6 @@
 import multiprocessing
 import time
-from functions import *
+from src.functions import *
 
 # Measure the total time for both operations
 def fprocessing():
