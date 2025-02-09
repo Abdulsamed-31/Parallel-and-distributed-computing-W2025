@@ -36,4 +36,3 @@ def run_multiprocessing():
     total_end_time = time.time()
     print(f"Total time taken (multiprocessing): {total_end_time - total_start_time} seconds")
     return total_end_time - total_start_time
-
