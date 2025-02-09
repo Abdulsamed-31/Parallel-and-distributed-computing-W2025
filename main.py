@@ -1,15 +1,11 @@
+import sys
+import os
+from src.threads import run_threads
+from src.multiprocessor import run_multiprocessing
+from src.performance import *
 
-from src.fprocessing import fprocessing
-from src.fthreading import fthreading
-
-def main():
-    # Call fprocessing to run the multiprocessing code
-    print("Running fprocessing (Multiprocessing)...")
-    fprocessing()
-
-    # Call fthreading to run the threading code
-    print("\nRunning fthreading (Threading)...")
-    fthreading()
-
+# Run threads and multiprocessing tasks
 if __name__ == "__main__":
-    main()
+    run_threads()
+    run_multiprocessing()
+    performance_analysis()
