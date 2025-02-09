@@ -2,6 +2,7 @@ import time
 from src.tasks import *
 from src.threads import run_threads
 from src.multiprocessor import run_multiprocessing
+from src.tasks import *
 
 # Measure sequential execution
 def run_sequential():
