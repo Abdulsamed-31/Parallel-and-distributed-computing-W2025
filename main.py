@@ -1,29 +1,33 @@
-import random
-import time
-import threading
+import threading, random, time
+from src.display import *
+from src.process_temp import *
+from src.sensor import *
 
-# Global shared data
-latest_temperatures = {}
-temperature_averages = {}
 
-# Lock for synchronizing access to shared data
-lock = threading.RLock()
-condition = threading.Condition(lock)
-
+# Main function to start threads
 def main():
+    # Initialize display
     initialize_display()
 
-    # Create and start threads for simulate_sensor
-    for i in range(3):  # Assuming 3 sensors
-        threading.Thread(target=simulate_sensor, args=(i,), daemon=True).start()
+    # Create and start sensor threads
+    sensor_threads = []
+    for i in range(NUM_SENSORS):
+        t = threading.Thread(target=simulate_sensor, args=(i,))
+        t.daemon = True
+        sensor_threads.append(t)
+        t.start()
 
-    # Create and start the processing thread
-    threading.Thread(target=process_temperatures, daemon=True).start()
+    # Create and start temperature processing thread
+    processing_thread = threading.Thread(target=process_temperatures)
+    processing_thread.daemon = True
+    processing_thread.start()
 
-    # Create and start the display update thread
-    threading.Thread(target=update_display, daemon=True).start()
+    # Create and start display update thread
+    display_thread = threading.Thread(target=update_display)
+    display_thread.daemon = True
+    display_thread.start()
 
-    # Keep the main thread running
+    # Keep the main thread alive to allow daemon threads to run
     while True:
         time.sleep(1)
 

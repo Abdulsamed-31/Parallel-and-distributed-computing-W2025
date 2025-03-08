@@ -1,3 +1,15 @@
+import threading
+import random
+import time
+
+# Synchronization primitives
+lock = threading.RLock()
+condition = threading.Condition(lock)
+
+# Shared resources
+latest_temperatures = {}
+temperature_averages = {}
+
 # Simulate sensor readings
 def simulate_sensor(sensor_id):
     while True:
