@@ -2,10 +2,10 @@
 
 import random
 import time
-from multiprocessing import Semaphore, current_process  # Import current_process here
+from multiprocessing import Semaphore, current_process
 
 class ConnectionPool:
-    def __init__(self, num_connections):
+    def __init__(self, num_connections: int):
         """
         Initialize the ConnectionPool with a list of connections and a semaphore.
         """
@@ -20,7 +20,7 @@ class ConnectionPool:
         connection = self.connections.pop()
         return connection
 
-    def release_connection(self, connection):
+    def release_connection(self, connection: str):
         """
         Release a connection back into the pool.
         """
@@ -31,15 +31,14 @@ def access_database(connection_pool):
     """
     Simulate a process accessing the database.
     """
-    # Get the current process name
     process_name = current_process().name
-    print(f"Process {process_name}: Waiting for a connection")
+    print(f"{process_name}: Waiting for a connection")
     
     connection = connection_pool.get_connection()
-    print(f"Process {process_name}: Acquired {connection}")
+    print(f"{process_name}: Acquired {connection}")
     
     # Simulate work with a sleep
     time.sleep(random.uniform(0.5, 2))
     
-    print(f"Process {process_name}: Releasing {connection}")
+    print(f"{process_name}: Releasing {connection}")
     connection_pool.release_connection(connection)

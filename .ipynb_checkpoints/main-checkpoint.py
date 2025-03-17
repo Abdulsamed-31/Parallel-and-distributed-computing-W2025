@@ -1,24 +1,24 @@
 
+
 import random
-import time
-from multiprocessing import Process
-from src.square import square
 from src.pool import (
     sequential_square,
     multiprocessing_process,
     multiprocessing_pool_map,
+    multiprocessing_pool_apply_async,
     multiprocessing_pool_apply,
-    process_pool_executor,
+    process_pool_executor
 )
 
+from multiprocessing import Process
 from src.database import ConnectionPool, access_database
 
 def main_square_program():
     """
     Main function to run the square computation program with different methods.
     """
-    # Create a random list of 106 numbers
-    random_list = [random.randint(1, 100) for _ in range(10**4)]
+    # Create a random list of 10^6 numbers
+    random_list = [random.randint(1, 100) for _ in range(10**6)]
 
     # Test sequential approach
     sequential_square(random_list)
@@ -28,6 +28,9 @@ def main_square_program():
 
     # Test multiprocessing pool with map()
     multiprocessing_pool_map(random_list)
+
+    # Test multiprocessing pool with apply()
+    multiprocessing_pool_apply_async(random_list)
 
     # Test multiprocessing pool with apply()
     multiprocessing_pool_apply(random_list)
@@ -53,13 +56,14 @@ def main_database_simulation():
         process.join()
 
 if __name__ == "__main__":
-
-    # Uncomment the following line to run the square program
-    print("\n Square Program: \n")
+    print("\n-----Square Program with 10^6 numbers-----")
     main_square_program()
 
-    # Uncomment the following line to run the database connection simulation
-    print("\n Process Synchronization with Semaphores: \n")
+    print("\n-----Square Program with 10^7 numbers-----")
+    random_list_10e7 = [random.randint(1, 100) for _ in range(10**7)]
+    main_square_program()
+
+    print("\n-----Process Synchronization with Semaphores-----")
     main_database_simulation()
 
 
