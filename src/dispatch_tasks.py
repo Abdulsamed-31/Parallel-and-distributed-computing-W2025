@@ -1,4 +1,4 @@
-from tasks import power
+from src.tasks import power
 
 def dispatch():
     results_objs = [
