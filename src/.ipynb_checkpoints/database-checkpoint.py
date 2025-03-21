@@ -1,44 +1,25 @@
-# src/database.py
 
-import random
 import time
-from multiprocessing import Semaphore, current_process
+import random
+from multiprocessing import Semaphore
 
 class ConnectionPool:
-    def __init__(self, num_connections: int):
-        """
-        Initialize the ConnectionPool with a list of connections and a semaphore.
-        """
-        self.connections = [f"Connection-{i}" for i in range(num_connections)]
+    def __init__(self, num_connections=3):
         self.semaphore = Semaphore(num_connections)
+        self.connections = [f"Connection-{i}" for i in range(num_connections)]
 
     def get_connection(self):
-        """
-        Get a connection from the pool, ensuring only a limited number of processes access the pool.
-        """
         self.semaphore.acquire()
-        connection = self.connections.pop()
-        return connection
+        return self.connections.pop()
 
-    def release_connection(self, connection: str):
-        """
-        Release a connection back into the pool.
-        """
+    def release_connection(self, connection):
         self.connections.append(connection)
         self.semaphore.release()
 
-def access_database(connection_pool):
-    """
-    Simulate a process accessing the database.
-    """
-    process_name = current_process().name
-    print(f"{process_name}: Waiting for a connection")
-    
-    connection = connection_pool.get_connection()
-    print(f"{process_name}: Acquired {connection}")
-    
-    # Simulate work with a sleep
-    time.sleep(random.uniform(0.5, 2))
-    
-    print(f"{process_name}: Releasing {connection}")
-    connection_pool.release_connection(connection)
+def access_database(pool):
+    connection = pool.get_connection()
+    print(f"Process {connection} acquired a connection.")
+    time.sleep(random.uniform(0.5, 2))  # Simulate work
+    pool.release_connection(connection)
+    print(f"Process {connection} released the connection.")
+

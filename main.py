@@ -1,69 +1,44 @@
 
 
-import random
+import numpy as np
+import time
+from multiprocessing import Pool, cpu_count, Process
+from concurrent.futures import ProcessPoolExecutor
 from src.pool import (
-    sequential_square,
-    multiprocessing_process,
+    sequential_for_loop,
     multiprocessing_pool_map,
-    multiprocessing_pool_apply_async,
     multiprocessing_pool_apply,
+    multiprocessing_pool_apply_async,
     process_pool_executor
 )
-
-from multiprocessing import Process
 from src.database import ConnectionPool, access_database
 
-def main_square_program():
-    """
-    Main function to run the square computation program with different methods.
-    """
-    # Create a random list of 10^6 numbers
-    random_list = [random.randint(1, 100) for _ in range(10**6)]
-
-    # Test sequential approach
-    sequential_square(random_list)
-
-    # Test multiprocessing (one process per number)
-    multiprocessing_process(random_list)
-
-    # Test multiprocessing pool with map()
+def main():
+    random_list = np.random.randint(1, 100, size=10**6)
+    print("\n-----Testing different approaches with 10^6 numbers-----")
+    sequential_for_loop(random_list)
     multiprocessing_pool_map(random_list)
-
-    # Test multiprocessing pool with apply()
-    multiprocessing_pool_apply_async(random_list)
-
-    # Test multiprocessing pool with apply()
     multiprocessing_pool_apply(random_list)
-
-    # Test ProcessPoolExecutor
+    multiprocessing_pool_apply_async(random_list)
     process_pool_executor(random_list)
 
-def main_database_simulation():
-    """
-    Main function to run the database connection pool simulation.
-    """
-    # Create a connection pool with 3 connections
+    random_list_10e7 = np.random.randint(1, 100, size=10**7)
+    print("\n-----Testing different approaches with 10^7 numbers-----")
+    sequential_for_loop(random_list_10e7)
+    multiprocessing_pool_map(random_list_10e7)
+    multiprocessing_pool_apply(random_list_10e7)
+    multiprocessing_pool_apply_async(random_list_10e7)
+    process_pool_executor(random_list_10e7)
+
+    print("\n-----Process Synchronization with Semaphores-----")
     pool = ConnectionPool(num_connections=3)
-
-    # Create 10 processes to simulate database access
-    processes = []
-    for i in range(10):  # Create 10 processes
-        process = Process(target=access_database, args=(pool,))
-        processes.append(process)
+    processes = [Process(target=access_database, args=(pool,)) for _ in range(10)]
+    for process in processes:
         process.start()
-
     for process in processes:
         process.join()
 
 if __name__ == "__main__":
-    print("\n-----Square Program with 10^6 numbers-----")
-    main_square_program()
-
-    print("\n-----Square Program with 10^7 numbers-----")
-    random_list_10e7 = [random.randint(1, 100) for _ in range(10**7)]
-    main_square_program()
-
-    print("\n-----Process Synchronization with Semaphores-----")
-    main_database_simulation()
+    main()
 
 

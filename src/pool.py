@@ -1,97 +1,120 @@
+
+import numpy as np
+import time
 from multiprocessing import Pool, cpu_count
 from concurrent.futures import ProcessPoolExecutor
-import time
-import random
-from .square import square
+import numba
 
-def sequential_square(random_list):
+# JIT-compiled function for fast parallel execution of squaring operations
+@numba.njit(fastmath=True, parallel=True)
+def parallel_square_array(arr):
     """
-    Compute squares of numbers sequentially.
-    """
-    start_time = time.time()
-    result = [square(num) for num in random_list]
-    sequential_time = time.time() - start_time
-    print(f"\n[sequential]\n")
-    print(f"Sequential time: {sequential_time:.5f} seconds")
-    return result
-
-def multiprocessing_process(random_list):
-    """
-    Compute squares of numbers using a fixed-size multiprocessing pool with chunking.
-    """
-    start_time = time.time()
+    Compute the square of each element in the given NumPy array.
+    Uses Numba for JIT compilation and parallel execution.
     
-    # Number of processes limited to the number of CPU cores (adjustable)
-    pool_size = min(cpu_count(), 8)  # Limit the pool size to 8 processes for optimal performance
+    Parameters:
+        arr (numpy.ndarray): Input array of numbers.
+    
+    Returns:
+        numpy.ndarray: Squared values of the input array.
+    """
+    return arr * arr  # Vectorized NumPy operation (faster than loops)
 
-    # Use Pool with chunking for efficient task distribution
-    chunk_size = len(random_list) // pool_size  # Dynamically calculate chunk size
-    with Pool(pool_size) as pool:
-        result = pool.map(square, random_list)
-
-    multiprocessing_time = time.time() - start_time
-    print(f"\n[Multiprocessing]\n")
-    print(f"(fixed-size pool) time: {multiprocessing_time:.5f} seconds")
+def sequential_for_loop(random_list):
+    """
+    Compute squares sequentially using Numba-optimized function.
+    
+    Parameters:
+        random_list (numpy.ndarray): Array of numbers to be squared.
+    
+    Returns:
+        numpy.ndarray: Squared values of the input array.
+    """
+    start_time = time.time()
+    result = parallel_square_array(random_list)  # Optimized vectorized function
+    print(f"Sequential for loop time: {time.time() - start_time:.5f} seconds")
+    return result
 
 def multiprocessing_pool_map(random_list):
     """
-    Compute squares of numbers using Pool with map() and a fixed pool size.
+    Compute squares in parallel using multiprocessing Pool with map().
+    
+    Parameters:
+        random_list (numpy.ndarray): Array of numbers to be squared.
+    
+    Returns:
+        numpy.ndarray: Squared values of the input array.
     """
     start_time = time.time()
-    
-    # Limit number of processes based on available CPU cores
-    pool_size = min(cpu_count(), 8)  # You can adjust this value
-    with Pool(pool_size) as pool:
-        result = pool.map(square, random_list)
+    pool_size = min(cpu_count(), 8)  # Use up to 8 CPU cores to balance performance
+    chunk_size = len(random_list) // (2 * pool_size)  # Optimize workload distribution
 
-    pool_map_time = time.time() - start_time
-    print(f"pool with map() time: {pool_map_time:.5f} seconds")
+    with Pool(pool_size) as pool:
+        # Split the array into chunks and process them in parallel
+        result = pool.map(parallel_square_array, np.array_split(random_list, pool_size), chunksize=chunk_size)
+
+    print(f"Multiprocessing pool map() time: {time.time() - start_time:.5f} seconds")
+    return np.concatenate(result)  # Merge the results back into a single array
 
 def multiprocessing_pool_apply(random_list):
     """
-    Compute squares of numbers using Pool with apply().
+    Compute squares in parallel using multiprocessing Pool with apply().
+    This version is much slower than starmap() because it runs one task at a time.
+    
+    Parameters:
+        random_list (numpy.ndarray): Array of numbers to be squared.
+    
+    Returns:
+        numpy.ndarray: Squared values of the input array.
     """
     start_time = time.time()
+    pool_size = min(cpu_count(), 8)  # Limit the number of parallel processes
     
-    pool_size = min(cpu_count(), 8)  # Limiting pool size
     with Pool(pool_size) as pool:
-        result = [pool.apply(square, (num,)) for num in random_list]
-
-    pool_apply_time = time.time() - start_time
-    print(f"pool with apply() time: {pool_apply_time:.5f} seconds")
+        # Using apply(), which runs one task at a time (VERY SLOW)
+        result = [pool.apply(parallel_square_array, (chunk,)) for chunk in np.array_split(random_list, pool_size)]
+    
+    print(f"Multiprocessing pool apply() time: {time.time() - start_time:.5f} seconds")
+    return np.concatenate(result)  # Merge chunks back into a single array
 
 
 def multiprocessing_pool_apply_async(random_list):
     """
-    Compute squares of numbers using Pool with apply_async() to speed up task execution.
+    Compute squares in parallel using multiprocessing Pool with apply_async().
+    
+    Parameters:
+        random_list (numpy.ndarray): Array of numbers to be squared.
+    
+    Returns:
+        numpy.ndarray: Squared values of the input array.
     """
     start_time = time.time()
-    
-    pool_size = 8  # Number of processes in the pool
-    with Pool(pool_size) as pool:
-        results = []
-        
-        # Use apply_async to run tasks asynchronously
-        for num in random_list:
-            result = pool.apply_async(square, (num,))
-            results.append(result)
-        
-        # Wait for all tasks to complete and get the result
-        result_values = [result.get() for result in results]
-    
-    pool_apply_async_time = time.time() - start_time
-    print(f"pool with apply_async() time: {pool_apply_async_time:.5f} seconds")
+    pool_size = min(cpu_count(), 8)  # Use up to 8 CPU cores
 
+    with Pool(pool_size) as pool:
+        # Apply async processing for each chunk and retrieve results efficiently
+        results = [pool.apply_async(parallel_square_array, (chunk,)) for chunk in np.array_split(random_list, pool_size)]
+        result_values = [res.get() for res in results]  # Collect results as processes complete
+
+    print(f"Multiprocessing pool apply_async() (optimized) time: {time.time() - start_time:.5f} seconds")
+    return np.concatenate(result_values)  # Merge results into a single array
 
 def process_pool_executor(random_list):
     """
-    Compute squares of numbers using ProcessPoolExecutor.
+    Compute squares using ProcessPoolExecutor for parallel processing.
+    
+    Parameters:
+        random_list (numpy.ndarray): Array of numbers to be squared.
+    
+    Returns:
+        numpy.ndarray: Squared values of the input array.
     """
     start_time = time.time()
-    
-    # Use a fixed-size pool based on system's available CPU cores
-    with ProcessPoolExecutor(max_workers=min(cpu_count(), 8)) as executor:
-        result = list(executor.map(square, random_list))
 
-    futures_time = time.time() - start_time
-    print(f"ProcessPoolExecutor time: {futures_time:.5f} seconds\n")
+    with ProcessPoolExecutor(max_workers=cpu_count()) as executor:
+        # Efficiently distribute workload using map()
+        result = list(executor.map(parallel_square_array, np.array_split(random_list, cpu_count())))
+
+    print(f"ProcessPoolExecutor time: {time.time() - start_time:.5f} seconds")
+    return np.concatenate(result)  # Merge results back into a single array
+
