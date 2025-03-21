@@ -1,7 +1,7 @@
-## Parallelized Genetic Algorithm for Route Optimization
+# Parallelized Genetic Algorithm for Route Optimization
 
 
-## AUTHOR: 
+### AUTHOR: 
 
     OUSSAMA ABDULSAMED MEDEBBER
     
@@ -14,13 +14,13 @@
 multiple process, multiple machines
 
     mpirun -np 2 --hostfile machines.txt python3 main.py  
+    scp -r main.py city_distances_extended.csv src student@10.102.0.218:/home/student/Parallel-and-distributed-computing-W2025
     
 multiple process, same machine
 
     mpiexec -n 4 python main.py   
 
-
-                                                             --------Description of trial code--------
+## Description of trial code
 
 Load Distance Matrix
 
@@ -55,7 +55,7 @@ Measure Execution Time
     Uses the time module to track how long the algorithm takes to run.
 
 
-                                                    --------Identifying Parts for Parallelization-------
+## Identifying Parts for Parallelization
                                                     -
 
 In the Genetic Algorithm (GA), the most computationally expensive operations are:
@@ -73,7 +73,8 @@ Why these choices?
     These operations involve large-scale repetitive computations that don’t depend on sequential execution.
     
 
-                                                                    --------OUTCOMES--------
+## OUTCOMES
+                                                                    
 
 Sequential Outcome:
 
@@ -116,9 +117,8 @@ Running with multiple cars (4) on different machines.
     Execution Time: 39.13 seconds
 
 
-    
 
-                                                                    --------Algorithm Enhancement--------
+## Algorithm Enhancement
                                                                     
 updated Functions:
 
@@ -186,9 +186,9 @@ Overall:
 
     
 
-                                                                    --------Adding more cars--------
+## Adding more cars
                                                                     
-To modify the Genetic Algorithm (GA) for multiple cars, we need to:
+ To modify the Genetic Algorithm (GA) for multiple cars, we need to:
 
     -Assign deliveries to multiple vehicles instead of just one.
     -Ensure each car has its own route while collectively minimizing total distance.
@@ -199,7 +199,7 @@ To modify the Genetic Algorithm (GA) for multiple cars, we need to:
     Execution Time: 39.13 seconds
 
     
-updated Functions:
+ updated Functions:
 
     calculate_fitness_multiple_cars
     Generate_unique_popluation_multiple_cars
