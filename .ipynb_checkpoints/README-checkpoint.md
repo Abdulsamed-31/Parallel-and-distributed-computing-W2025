@@ -22,7 +22,6 @@
 ### multiple process(4), multiple machine(2)
 
     mpirun -np 2 --hostfile machines.txt python3 main.py   
-    
 
 ## Description of trial code
 
@@ -78,7 +77,33 @@ Why these choices?
     
 
 ## OUTCOMES
+
+# Returning Negative total distance for calculating fitness.
+
+following code is parallelized, hypertuned, optimized and implemented on multiple vehicles.
+
+sequential: 
+
+    Generation 199: Best fitness = 680.0
+    Best Solution: [[0, np.int64(4), np.int64(11), np.int64(15), np.int64(6), np.int64(10)], [0, np.int64(3), np.int64(13), np.int64(12), np.int64(17), np.int64(1)], [0, np.int64(9), np.int64(8), np.int64(16), np.int64(2), np.int64(5)], [0, np.int64(18), np.int64(19), np.int64(14), np.int64(7)]]
+    Total Distance: 680.0
+    Execution Time: 54.07 seconds
+
+Multiprocessing:
+
+    Generation 199: Best fitness = 841.0
+    Best Solution: [[0, np.int64(16), np.int64(11), np.int64(15), np.int64(6), np.int64(4)], [0, np.int64(7), np.int64(12), np.int64(8), np.int64(14), np.int64(10)], [0, np.int64(18), np.int64(2), np.int64(9), np.int64(5), np.int64(13)], [0, np.int64(1), np.int64(17), np.int64(19), np.int64(3)]]
+    Total Distance: 841.0
+    Execution Time: 41.57 seconds
+
+Multiple machines:
+
+    Generation 199: Best fitness = 262.0
+    Best Solution: [[0, np.int64(17), np.int64(8), np.int64(7), np.int64(15), np.int64(4)], [0, np.int64(14), np.int64(2), np.int64(6), np.int64(19), np.int64(3)], [0, np.int64(18), np.int64(10), np.int64(9), np.int64(12), np.int64(13)], [0, np.int64(5), np.int64(11), np.int64(1), np.int64(16)]]
+    Total Distance: 800.0
+    Execution Time: 42.93 seconds
                                                                     
+# Returning Positive total distance for calculating fitness.
 
 Sequential Outcome:
 
@@ -93,16 +118,8 @@ Parallelized + hypertuning Outcome:
     Generation 198: Best fitness = 678.0
     Best Solution: [0, 16, 4, 13, 8, 2, 6, 12, 10, 11, 19, 3, 14, 17, 9, 7, 1, 5, 18, 15]
     
-    Total Distance: 707.0
+    Total Distance: 989.0
     Execution Time: 6.03 seconds
-
-Running on different machines:
-
-    Generation 199: Best fitness = 627.0
-    Best Solution: [np.int64(0), np.int64(10), np.int64(3), np.int64(4), np.int64(7), np.int64(19), np.int64(9), np.int64(11), np.int64(12), np.int64(13), np.int64(18), np.int64(15), np.int64(2), np.int64(14), np.int64(8), np.int64(6), np.int64(16), np.int64(1), np.int64(17), np.int64(5)]
-    
-    Total Distance: 680.0
-    Execution Time: 6.47 seconds
 
 Running with multiple cars (4).
 

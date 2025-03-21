@@ -31,76 +31,46 @@ import numpy as np
 #     return total_distance
 
 
-# def calc_fitness_multiple_cars(route, distance_matrix, num_cars):
-#     """
-#     Calculates the total distance traveled for multiple cars.
-
-#     Parameters:
-#         - route (list of lists): Each sublist represents a route for one car.
-#         - distance_matrix (numpy.ndarray): Matrix of distances between nodes.
-#         - num_cars (int): Number of cars available for delivery.
-
-#     Returns:
-#         - float: The negative total distance traveled (negative because we want to minimize distance).
-#           Returns a large negative penalty if the route is infeasible.
-#     """
-#     if not isinstance(route[0], list):  # Ensure route is already split per car
-#         route = [list(r) for r in np.array_split(route, num_cars)]  # Split deliveries among cars
-
-#     total_distance = 0
-#     infeasible_penalty = -1e6  # Large penalty for infeasible routes
-
-#     for sub_route in route:
-#         distance = 0
-#         prev_node = 0  # Start at depot (node 0)
-        
-#         for node in sub_route:
-#             if distance_matrix[prev_node, node] == 10000:  # Infeasible route check
-#                 return infeasible_penalty  
-#             distance += distance_matrix[prev_node, node]
-#             prev_node = node
-
-#         # Return to depot
-#         if distance_matrix[prev_node, 0] == 10000:
-#             return infeasible_penalty
-#         distance += distance_matrix[prev_node, 0]
-
-#         total_distance += distance
-
-#     return -total_distance  # Negative total distance for minimization
-
-
-# UPDATED FUNCTION
 def calc_fitness_multiple_cars(route, distance_matrix, num_cars):
     """
-    Calculate total distance for multiple cars.
-    - Ensures all deliveries are covered while minimizing longest route.
+    Calculates the total distance traveled for multiple cars.
 
     Parameters:
         - route (list of lists): Each sublist represents a route for one car.
-        - distance_matrix (numpy.ndarray): Matrix of distances.
-        - num_cars (int): Number of cars.
+        - distance_matrix (numpy.ndarray): Matrix of distances between nodes.
+        - num_cars (int): Number of cars available for delivery.
 
     Returns:
-        - float: The longest distance traveled by a single car (to balance workload).
+        - float: The negative total distance traveled (negative because we want to minimize distance).
+          Returns a large negative penalty if the route is infeasible.
     """
     if not isinstance(route[0], list):  # Ensure route is already split per car
-        # If the route is a single list, split it manually
-        route = [list(r) for r in np.array_split(route, num_cars)]
+        route = [list(r) for r in np.array_split(route, num_cars)]  # Split deliveries among cars
 
-    total_distances = []
+    total_distance = 0
+    infeasible_penalty = -1e6  # Large penalty for infeasible routes
 
     for sub_route in route:
         distance = 0
-        prev_node = 0  # Start at depot
+        prev_node = 0  # Start at depot (node 0)
+        
         for node in sub_route:
+            if distance_matrix[prev_node, node] == 10000:  # Infeasible route check
+                return infeasible_penalty  
             distance += distance_matrix[prev_node, node]
             prev_node = node
-        distance += distance_matrix[prev_node, 0]  # Return to depot
-        total_distances.append(distance)
 
-    return max(total_distances)  # Minimize the longest distance
+        # Return to depot
+        if distance_matrix[prev_node, 0] == 10000:
+            return infeasible_penalty
+        distance += distance_matrix[prev_node, 0]
 
+        total_distance += distance
+
+    return -total_distance  # Negative total distance for minimization
+
+
+# # UPDATED FUNCTION
 # def calc_fitness_multiple_cars(route, distance_matrix, num_cars):
 #     """
 #     Calculate total distance for multiple cars.
@@ -112,30 +82,24 @@ def calc_fitness_multiple_cars(route, distance_matrix, num_cars):
 #         - num_cars (int): Number of cars.
 
 #     Returns:
-#         - float: The negative total distance traveled (negative because we want to minimize distance).
-#           Returns a large negative penalty if the route is infeasible.
+#         - float: The longest distance traveled by a single car (to balance workload).
 #     """
 #     if not isinstance(route[0], list):  # Ensure route is already split per car
+#         # If the route is a single list, split it manually
 #         route = [list(r) for r in np.array_split(route, num_cars)]
 
 #     total_distances = []
-#     infeasible_penalty = -1e6  # Large negative penalty for infeasible routes
 
 #     for sub_route in route:
 #         distance = 0
 #         prev_node = 0  # Start at depot
 #         for node in sub_route:
-#             if distance_matrix[prev_node, node] == 10000:  # Infeasible check
-#                 return infeasible_penalty  
 #             distance += distance_matrix[prev_node, node]
 #             prev_node = node
-#         if distance_matrix[prev_node, 0] == 10000:  # Return-to-depot check
-#             return infeasible_penalty
-#         distance += distance_matrix[prev_node, 0]  
+#         distance += distance_matrix[prev_node, 0]  # Return to depot
 #         total_distances.append(distance)
 
-#     return -sum(total_distances)  # Return negative total distance
-
+#     return max(total_distances)  # Minimize the longest distance
 
 
 

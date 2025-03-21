@@ -55,7 +55,7 @@ stagnation_counter = 0
 # Multi-Car Genetic Algorithm
 for generation in range(num_generations):
     # Evaluate fitness for each sub-population
-    sub_fitness_values = np.array([calc_fitness_multiple_cars(route, distance_matrix, num_cars) for route in sub_population])  #calculate fitness for multiple cars
+    sub_fitness_values = np.array([-calc_fitness_multiple_cars(route, distance_matrix, num_cars) for route in sub_population])  #calculate fitness for multiple cars
 
     # Gather fitness values at rank 0
     fitness_values = comm.gather(sub_fitness_values, root=0)
@@ -113,7 +113,7 @@ final_population = comm.gather(sub_population, root=0)
 
 if rank == 0:
     final_population = [ind for sublist in final_population for ind in sublist]
-    final_fitness_values = np.array([calc_fitness_multiple_cars(route, distance_matrix, num_cars) for route in final_population])  #calculate fitness for multiple cars
+    final_fitness_values = np.array([-calc_fitness_multiple_cars(route, distance_matrix, num_cars) for route in final_population])  #calculate fitness for multiple cars
     best_idx = np.argmin(final_fitness_values)
     best_solution = final_population[best_idx]
 
