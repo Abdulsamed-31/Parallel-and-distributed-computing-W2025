@@ -56,7 +56,7 @@ Measure Execution Time
 
 
 ## Identifying Parts for Parallelization
-                                                    -
+                                                    
 
 In the Genetic Algorithm (GA), the most computationally expensive operations are:
 
@@ -89,7 +89,7 @@ Parallelized + hypertuning Outcome:
     Generation 198: Best fitness = 678.0
     Best Solution: [0, 16, 4, 13, 8, 2, 6, 12, 10, 11, 19, 3, 14, 17, 9, 7, 1, 5, 18, 15]
     
-    Total Distance: -707.0
+    Total Distance: 707.0
     Execution Time: 6.03 seconds
 
 Running on different machines:
@@ -113,13 +113,14 @@ Running with multiple cars (4) on different machines multiple process.
     Generation 199: Best fitness = 257.0
     Best Solution: [[0, np.int64(7), np.int64(8), np.int64(6), np.int64(12), np.int64(1), np.int64(9), np.int64(5)], [0, np.int64(4), np.int64(18), np.int64(19), np.int64(11), np.int64(15), np.int64(13)], [0, np.int64(3), np.int64(16), np.int64(2), np.int64(14), np.int64(10), np.int64(17)]]
     
-    Total Distance: -257.0
+    Total Distance: 257.0
     Execution Time: 39.13 seconds
 
 Running with multiple cars (4) on different machines single process.
 
     Generation 199: Best fitness = 205.0
     Best Solution: [[0, np.int64(16), np.int64(2), np.int64(6), np.int64(12), np.int64(18)], [0, np.int64(5), np.int64(13), np.int64(15), np.int64(8), np.int64(7)], [0, np.int64(9), np.int64(11), np.int64(4), np.int64(19), np.int64(17)], [0, np.int64(10), np.int64(3), np.int64(14), np.int64(1)]]
+    
     Total Distance: 205.0
     Execution Time: 45.45 seconds
 
@@ -212,7 +213,7 @@ Overall:
     Generate_unique_popluation_multiple_cars
 
 
-## PARALLELIZABLE CODE WITH ADAPTIVE MUTATE AND OX_CROSSOVER
+## PARALLELIZABLE CODE WITH ADAPTIVE MUTATE AND PMX_CROSSOVER (ONE CAR)
     
     from mpi4py import MPI
     import time
