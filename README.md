@@ -11,14 +11,18 @@
 
 ## EXECUTION CODE:
 
-multiple process, multiple machines
+### single process, single machine 
 
-    mpirun -np 2 --hostfile machines.txt python3 main.py  
-    scp -r main.py city_distances_extended.csv src student@10.102.0.218:/home/student/Parallel-and-distributed-computing-W2025
+    python main.py    
+
+### multiple process(4), single machine 
     
-multiple process, same machine
-
     mpiexec -n 4 python main.py   
+
+### multiple process(4), multiple machine(2)
+
+    mpirun -np 2 --hostfile machines.txt python3 main.py   
+    
 
 ## Description of trial code
 
