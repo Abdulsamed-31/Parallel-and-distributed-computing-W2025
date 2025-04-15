@@ -1,7 +1,4 @@
-from pathlib import Path
 
-# Define the markdown content
-markdown_content = """
 ### Question 1 (10 points)  
 **Explain how the automated maze explorer works.**  
 Your answer should include:
