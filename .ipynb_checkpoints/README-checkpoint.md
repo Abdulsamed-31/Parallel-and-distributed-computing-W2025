@@ -104,7 +104,7 @@ Your answer should include:
 
 ---
 
-#### 🔍 Analysis of Current Limitations
+####  Analysis of Current Limitations
 
 | Limitation | Description |
 |------------|-------------|
@@ -115,7 +115,7 @@ Your answer should include:
 
 ---
 
-#### ✅ Proposed Improvements
+####  Proposed Improvements
 
 | Improvement | Description |
 |-------------|-------------|
@@ -140,7 +140,7 @@ Run both on the static maze. Collect:
 
 ---
 
-#### 📉 Moves per Second (Enhanced Runs)
+####  Moves per Second (Enhanced Runs)
 
 | Run | Time (s) | Moves | Moves/sec |
 |-----|----------|-------|-----------|
@@ -152,7 +152,7 @@ Run both on the static maze. Collect:
 
 ---
 
-#### ✅ Key Improvements
+####  Key Improvements
 
 - **Over 90% reduction** in move count  
 - **Consistent performance** across runs  
@@ -160,7 +160,7 @@ Run both on the static maze. Collect:
 
 ---
 
-#### ⚖️ Trade-offs
+####  Trade-offs
 
 | Trade-Off | Description |
 |-----------|-------------|
@@ -171,19 +171,13 @@ Run both on the static maze. Collect:
 
 ---
 
-### 📌 Summary
+###  Summary
 
 | Explorer | Moves | Time (s) | Moves/sec | Efficient? |
 |----------|-------|----------|------------|-------------|
-| Original | 1279 | 0.00 | 847,207 | ❌ No |
-| Enhanced | 127 | ~0.0025 | ~64,078 | ✅ Yes |
+| Original | 1279 | 0.00 | 847,207 |  No |
+| Enhanced | 127 | ~0.0025 | ~64,078 |  Yes |
 
 **Conclusion**:  
 The enhanced explorer shows massive gains in efficiency and path optimality. Although moves/sec appears lower, it’s due to the reduced steps needed to reach the goal. Algorithms like **A*** and **BFS** are likely in use, delivering significantly better results in a more structured and optimized way.
-"""
 
-# Write the markdown content to a file
-file_path = Path("/mnt/data/maze_explorer_report.md")
-file_path.write_text(markdown_content)
-
-file_path
